@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ __('global.app_name') }} - @yield('title')</title>
 
     <!-- Google Font: Source Sans Pro -->
@@ -18,6 +19,10 @@
     <!-- Custom Theme style -->
     <link rel="stylesheet" href="{{ asset('adminlte/css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('adminlte/css/custom_dark-mode.css') }}">
+    <!-- Page Styles -->
+    @yield('styles')
+    <!-- Stack Styles -->
+    @stack('styles')
 </head>
 
 <body class="sidebar-mini layout-fixed layout-navbar-fixed text-md">

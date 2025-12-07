@@ -27,6 +27,15 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 // Main class
 class LanguageController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:languages.view')->only(['index', 'show']);
+        $this->middleware('permission:languages.create')->only(['create', 'store']);
+        $this->middleware('permission:languages.edit')->only(['edit', 'update', 'editAll', 'updateInline']);
+        $this->middleware('permission:languages.delete')->only(['delete', 'deleteSave']);
+        $this->middleware('permission:languages.export')->only(['exportExcel', 'exportPdf', 'exportWord']);
+    }
+
     // Action Index
     public function index(Request $request)
     {

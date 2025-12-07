@@ -21,14 +21,9 @@ class ChatManager {
     connectWebSocket() {
         try {
             this.ws = new WebSocket('ws://localhost:8080');
-            console.log('Attempting WebSocket connection to ws://localhost:8080');
-            console.log('Current user ID:', this.userId);
-            console.log('Receiver ID:', this.receiverId);
 
             this.ws.onopen = (event) => {
-                console.log('✅ Connected to WebSocket successfully');
                 this.isConnected = true;
-                console.log('🔄 Registering user...');
                 this.registerUser();
                 // Load initial messages
                 this.loadInitialMessages();
@@ -46,19 +41,16 @@ class ChatManager {
             };
 
             this.ws.onclose = (event) => {
-                console.log('WebSocket connection closed');
                 this.isConnected = false;
                 // Attempt to reconnect after 5 seconds
                 setTimeout(() => this.connectWebSocket(), 5000);
             };
 
             this.ws.onerror = (error) => {
-                console.error('WebSocket error:', error);
                 this.isConnected = false;
                 alert('Error de conexión WebSocket. Verifica que el servidor esté ejecutándose.');
             };
         } catch (error) {
-            console.error('Failed to connect to WebSocket:', error);
             alert('Error: No se pudo conectar al servidor WebSocket. Verifica que esté ejecutándose.');
         }
     }
@@ -69,10 +61,7 @@ class ChatManager {
                 type: 'register',
                 user_id: this.userId
             };
-            console.log('📤 Sending registration message:', registerMessage);
             this.ws.send(JSON.stringify(registerMessage));
-        } else {
-            console.error('❌ Cannot register user: WebSocket not connected');
         }
     }
 
@@ -87,18 +76,13 @@ class ChatManager {
             this.scrollToBottom();
         })
         .catch(error => {
-            console.error('Error loading initial messages:', error);
+            // Error loading initial messages - could add user notification
         });
     }
 
     bindEvents() {
-        console.log('Binding events...');
-        console.log('Send button found:', this.sendButton);
-        console.log('Message input found:', this.messageInput);
-
         if (this.sendButton) {
             this.sendButton.addEventListener('click', () => {
-                console.log('Send button clicked');
                 this.sendMessage();
             });
         }
@@ -106,7 +90,6 @@ class ChatManager {
         if (this.messageInput) {
             this.messageInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
-                    console.log('Enter key pressed');
                     this.sendMessage();
                 }
             });
@@ -114,19 +97,13 @@ class ChatManager {
     }
 
     sendMessage() {
-        console.log('sendMessage called');
-        console.log('messageInput element:', this.messageInput);
-
         if (!this.messageInput) {
-            console.error('Message input element not found');
             return;
         }
 
         const message = this.messageInput.value.trim();
-        console.log('Message to send:', message);
 
         if (message === '') {
-            console.log('Message is empty, not sending');
             return;
         }
 
@@ -140,7 +117,6 @@ class ChatManager {
             }));
             this.messageInput.value = '';
         } else {
-            console.error('WebSocket not connected. Cannot send message.');
             alert('Error: No hay conexión WebSocket. Verifica que el servidor esté ejecutándose.');
         }
     }
@@ -162,29 +138,20 @@ class ChatManager {
     }
 
     handleUserStatusUpdate(data) {
-        console.log('📡 User status update received:', data);
-        console.log('🎯 Current user ID:', this.userId, 'Receiver ID:', this.receiverId);
-
         // Update user status in the user list (index page)
         const userElements = document.querySelectorAll(`[data-user-id="${data.user_id}"]`);
-        console.log('🔍 Found', userElements.length, 'user elements to update for user', data.user_id);
 
-        userElements.forEach((element, index) => {
-            console.log('🔄 Updating user list element', index + 1);
+        userElements.forEach((element) => {
             const statusElement = element.querySelector('.user-status');
             if (statusElement) {
                 const newStatus = data.status === 'online' ? 'ACTIVO' : 'DESCONECTADO';
-                console.log('📝 Changing user list status to:', newStatus);
                 statusElement.textContent = newStatus;
                 statusElement.className = `user-status status-${data.status}`;
-            } else {
-                console.warn('⚠️ No .user-status element found in user list element');
             }
         });
 
         // Update chat header status if it's the user we're chatting with
         if (data.user_id == this.receiverId) {
-            console.log('🎯 Updating chat header for receiver user');
             const chatHeader = document.querySelector('.card-title');
             if (chatHeader) {
                 const statusText = data.status === 'online' ? 'ACTIVO' : 'DESCONECTADO';
@@ -201,19 +168,11 @@ class ChatManager {
                 statusSpan.className = `user-status-header ${statusClass}`;
                 statusSpan.innerHTML = ` <small>(${statusText})</small>`;
                 chatHeader.appendChild(statusSpan);
-                console.log('✅ Chat header updated with status:', statusText);
-            } else {
-                console.warn('⚠️ Chat header not found');
             }
-        } else {
-            console.log('ℹ️ Status update is not for the current chat receiver');
         }
     }
 
     handleOnlineUsersList(data) {
-        console.log('📋 Received online users list:', data);
-        console.log('👥 Online user IDs:', data.online_users);
-
         // Update all user statuses based on the online users list
         const allUserElements = document.querySelectorAll('[data-user-id]');
 
@@ -225,13 +184,10 @@ class ChatManager {
                 const isOnline = data.online_users.includes(userId);
                 const newStatus = isOnline ? 'ACTIVO' : 'DESCONECTADO';
 
-                console.log(`🔄 User ${userId}: ${newStatus}`);
                 statusElement.textContent = newStatus;
                 statusElement.className = `user-status status-${isOnline ? 'online' : 'offline'}`;
             }
         });
-
-        console.log('✅ All user statuses updated from online users list');
     }
 
     appendMessage(message, isSent) {
@@ -257,74 +213,54 @@ class ChatManager {
 
 // Initialize when document is ready
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Document ready, checking chat config...');
-    console.log('chatConfig:', window.chatConfig);
-    console.log('csrfToken:', window.csrfToken);
-    console.log('routes:', window.routes);
-
     if (typeof window.chatConfig !== 'undefined') {
         if (window.chatConfig.isIndexPage) {
-            console.log('Initializing status-only mode for index page...');
             initializeStatusOnly();
         } else {
-            console.log('Initializing ChatManager for show page...');
             new ChatManager(
                 window.chatConfig.userId,
                 window.chatConfig.receiverId
             );
         }
-    } else {
-        console.error('window.chatConfig is undefined');
     }
 });
 
 // Status-only initialization for index page
 function initializeStatusOnly() {
-    console.log('🚀 Starting status-only WebSocket connection...');
-
     const ws = new WebSocket('ws://localhost:8080');
-    console.log('Attempting WebSocket connection for status updates...');
 
     ws.onopen = (event) => {
-        console.log('✅ Connected to WebSocket for status updates');
         // Register current user for status updates
         ws.send(JSON.stringify({
             type: 'register',
             user_id: window.chatConfig.userId
         }));
-        console.log('📤 Registered user for status updates');
     };
 
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.type === 'user_status') {
-            console.log('📡 Status update received:', data);
             updateUserStatus(data);
         } else if (data.type === 'online_users_list') {
-            console.log('📋 Online users list received:', data);
             updateAllUserStatuses(data);
         }
     };
 
     ws.onclose = (event) => {
-        console.log('WebSocket connection closed, attempting reconnect...');
         setTimeout(() => initializeStatusOnly(), 5000);
     };
 
     ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
+        // WebSocket error occurred
     };
 
     function updateUserStatus(data) {
-        console.log('🎯 Updating status for user:', data.user_id);
         const userElements = document.querySelectorAll(`[data-user-id="${data.user_id}"]`);
-        console.log('🔍 Found', userElements.length, 'elements to update');
 
-        userElements.forEach((element, index) => {
+        userElements.forEach((element) => {
             const statusElement = element.querySelector('.user-status');
             if (statusElement) {
                 const newStatus = data.status === 'online' ? 'ACTIVO' : 'DESCONECTADO';
-                console.log('📝 Updating status to:', newStatus);
                 statusElement.textContent = newStatus;
                 statusElement.className = `user-status status-${data.status}`;
             }
@@ -332,8 +268,6 @@ function initializeStatusOnly() {
     }
 
     function updateAllUserStatuses(data) {
-        console.log('📋 Updating all user statuses from list:', data.online_users);
-
         const allUserElements = document.querySelectorAll('[data-user-id]');
 
         allUserElements.forEach(element => {
@@ -344,12 +278,9 @@ function initializeStatusOnly() {
                 const isOnline = data.online_users.includes(userId);
                 const newStatus = isOnline ? 'ACTIVO' : 'DESCONECTADO';
 
-                console.log(`🔄 User ${userId}: ${newStatus}`);
                 statusElement.textContent = newStatus;
                 statusElement.className = `user-status status-${isOnline ? 'online' : 'offline'}`;
             }
         });
-
-        console.log('✅ All user statuses updated from online users list');
     }
 }

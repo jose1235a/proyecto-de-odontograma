@@ -18,4 +18,5 @@ return [
     'password_confirmation' => 'Password Confirmation',
     'photo'         => 'Photo',
     'is_active'     => 'Status',
+    'role'          => 'Role',
 ];

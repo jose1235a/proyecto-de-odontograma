@@ -14,10 +14,10 @@ class LanguagesSeeder extends Seeder
     public function run(): void
     {
         DB::table('languages')->insert([
-            ['id' => 1, 'slug' => Str::random(22), 'created_by' => 1, 'iso_code' => 'es', 'name' => 'Spanish',   'created_at' => now(), 'updated_at' => now()],
-            ['id' => 2, 'slug' => Str::random(22), 'created_by' => 1, 'iso_code' => 'en', 'name' => 'English',   'created_at' => now(), 'updated_at' => now()],
-            ['id' => 3, 'slug' => Str::random(22), 'created_by' => 1, 'iso_code' => 'pt', 'name' => 'Português', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 4, 'slug' => Str::random(22), 'created_by' => 1, 'iso_code' => 'fr', 'name' => 'French',    'created_at' => now(), 'updated_at' => now()],            
+            ['id' => 1, 'slug' => Str::random(22), 'created_by' => 1, 'iso_code' => 'es', 'name' => 'es', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 2, 'slug' => Str::random(22), 'created_by' => 1, 'iso_code' => 'en', 'name' => 'en', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 3, 'slug' => Str::random(22), 'created_by' => 1, 'iso_code' => 'pt', 'name' => 'pt', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 4, 'slug' => Str::random(22), 'created_by' => 1, 'iso_code' => 'fr', 'name' => 'fr', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

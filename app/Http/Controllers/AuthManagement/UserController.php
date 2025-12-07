@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 // Use Models
 use App\Models\User;
+use Spatie\Permission\Models\Role;
  
 // Use Illuminates
 use Illuminate\Http\Request;
@@ -22,6 +23,14 @@ use App\Http\Requests\AuthManagement\User\UpdateRequest;
 // Main class
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:users.view')->only(['index', 'show']);
+        $this->middleware('permission:users.create')->only(['create', 'store']);
+        $this->middleware('permission:users.edit')->only(['edit', 'update']);
+        $this->middleware('permission:users.delete')->only(['delete', 'deleteSave']);
+    }
+
     // ------------------------------
     // INDEX
     // ------------------------------
@@ -62,7 +71,9 @@ class UserController extends Controller
     // ------------------------------
     public function create()
     {
-        return view('auth_management.users.create');
+        $roles = Role::all();
+
+        return view('auth_management.users.create', compact('roles'));
     }
 
     // Action Insert data from view create.blade.php
@@ -87,7 +98,11 @@ class UserController extends Controller
         
         // Save array data
         $user->save();
-       
+
+        if ($request->filled('role')) {
+            $user->assignRole($request->input('role'));
+        }
+
         // Redirect to view with success message
         return redirect()
                ->route('auth_management.users.index')
@@ -107,7 +122,9 @@ class UserController extends Controller
     // ------------------------------
     public function edit(User $user)
     {
-        return view('auth_management.users.edit', compact('user'));
+        $roles = Role::all();
+
+        return view('auth_management.users.edit', compact('user', 'roles'));
     }
 
     // Action Update data from view edit.blade.php
@@ -142,6 +159,9 @@ class UserController extends Controller
 
         // Save array data
         $user->save();
+
+        $role = $request->input('role');
+        $user->syncRoles($role ? [$role] : []);
         
         // Redirect to view with success message
         return redirect()

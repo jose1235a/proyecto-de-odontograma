@@ -1,0 +1,36 @@
+.odontogram-canvas {
+    border: 2px solid #8fd4d4;
+    border-radius: 14px;
+    background: #ffffff;
+    cursor: default;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+}
+
+.odontogram-selected-tooth {
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    padding: 10px;
+    display: inline-block;
+    background: #f8f9fa;
+    margin-bottom: 10px;
+}
+
+.treatment-history-item {
+    background: #f8f9fa;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 0.35rem;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.odontogram-history-scroll {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.odontogram-legend-swatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 0.25rem;
+    display: inline-block;
+}

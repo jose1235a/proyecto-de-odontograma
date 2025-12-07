@@ -22,17 +22,19 @@ Route::group(
         // Protected by auth
         Route::middleware(['auth'])->group(function () {
 
-            // Main 
+            // Main
             Route::get('/', function () {
                 return Auth::check()
                     ? redirect()->route('dashboard_management.dashboards.index')
                     : redirect()->route('login');
             });
-            
+
             require __DIR__.'/system_management.php';
             require __DIR__.'/dashboard_management.php';
             require __DIR__.'/download_management.php';
-    
+            require __DIR__.'/roles_permissions.php';
+            require __DIR__.'/dental_management.php';
+
             // Auth Management
             Route::prefix('auth_management')->name('auth_management.')->group(function () {
                 // Users

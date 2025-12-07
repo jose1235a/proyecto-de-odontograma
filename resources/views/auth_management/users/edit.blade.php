@@ -52,6 +52,21 @@
             </select>
           </div>
 
+          <div class="form-group">
+            <label for="role">{{ __('users.role') }} <span class="text-danger">(*)</span></label>
+            @php
+                $currentRole = old('role', $user->roles->pluck('name')->first());
+            @endphp
+            <select name="role" id="role" class="form-control" required>
+                <option value="">{{ __('global.select_option') }}</option>
+                @foreach($roles as $role)
+                    <option value="{{ $role->name }}" {{ $currentRole === $role->name ? 'selected' : '' }}>
+                        {{ $role->name }}
+                    </option>
+                @endforeach
+            </select>
+          </div>
+
         </form>  
       </div>
 

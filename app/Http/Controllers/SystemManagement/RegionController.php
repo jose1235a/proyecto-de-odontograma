@@ -27,6 +27,15 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 // Main class
 class RegionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:regions.view')->only(['index', 'show']);
+        $this->middleware('permission:regions.create')->only(['create', 'store']);
+        $this->middleware('permission:regions.edit')->only(['edit', 'update', 'editAll', 'updateInline']);
+        $this->middleware('permission:regions.delete')->only(['delete', 'deleteSave']);
+        $this->middleware('permission:regions.export')->only(['exportExcel', 'exportPdf', 'exportWord']);
+    }
+
     // Action Index
     public function index(Request $request)
     {

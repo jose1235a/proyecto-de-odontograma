@@ -27,6 +27,15 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 // Main class
 class TenantController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:tenants.view')->only(['index', 'show']);
+        $this->middleware('permission:tenants.create')->only(['create', 'store']);
+        $this->middleware('permission:tenants.edit')->only(['edit', 'update', 'editAll', 'updateInline']);
+        $this->middleware('permission:tenants.delete')->only(['delete', 'deleteSave']);
+        $this->middleware('permission:tenants.export')->only(['exportExcel', 'exportPdf', 'exportWord']);
+    }
+
     // Action Index
     public function index(Request $request)
     {

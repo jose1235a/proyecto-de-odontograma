@@ -9,10 +9,11 @@ It includes a custom command to create the database, run migrations, and insert 
 
 - PHP 8.2 or higher
 - Composer
-- MySQL 
+- MySQL
 - Laravel 12.x
 - Node.js (optional, for asset compilation)
-- An environment such as Laragon  
+- An environment such as Laragon
+- Kilo Code (AI used for development)
 
 ---
 
@@ -43,6 +44,8 @@ DB_PASSWORD=
 
 If this is a new project, change `DB_DATABASE` to the appropriate name (e.g., `app_new_db`).
 
+The database files (migrations, seeders, factories) are located in the `database/basedatos.sql/odontograma.sql` 
+
 4. Generate the application key:
 
 ```bash
@@ -54,6 +57,12 @@ php artisan key:generate
 ```bash
 php artisan optimize:clear
 # php artisan permission:cache-reset  #Cache for permissions
+```
+
+6. Create the symbolic link for storage:
+
+```bash
+php artisan storage:link
 ```
 
 ---

@@ -1,11 +1,13 @@
 <?php
 
-// Main controller file
-// All Controllers must extend this class
 namespace App\Http\Controllers;
 
-// Base controller
-abstract class Controller
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
+
+class Controller extends BaseController
 {
-    // Do not delete this file
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 }

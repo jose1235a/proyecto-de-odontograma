@@ -37,7 +37,21 @@
           <div class="form-group">
               <label for="photo">{{ __('users.photo') }} </label>
               <input type="file" name="photo" class="form-control">
-          </div>          
+          </div>
+
+          <div class="form-group">
+            <label for="role">{{ __('users.role') }} <span class="text-danger">(*)</span></label>
+            <select name="role" id="role" class="form-control" required>
+                <option value="" disabled {{ old('role') ? '' : 'selected' }}>
+                    {{ __('global.select_option') }}
+                </option>
+                @foreach($roles as $role)
+                    <option value="{{ $role->name }}" {{ old('role') === $role->name ? 'selected' : '' }}>
+                        {{ $role->name }}
+                    </option>
+                @endforeach
+            </select>
+          </div>
         </form>
       </div>
       

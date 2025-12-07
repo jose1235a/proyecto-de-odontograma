@@ -42,6 +42,15 @@ use App\Jobs\GenerateReportJob;
 // Main class
 class SystemModuleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:system_modules.view')->only(['index', 'show']);
+        $this->middleware('permission:system_modules.create')->only(['create', 'store']);
+        $this->middleware('permission:system_modules.edit')->only(['edit', 'update', 'editAll', 'updateInline']);
+        $this->middleware('permission:system_modules.delete')->only(['delete', 'deleteSave']);
+        $this->middleware('permission:system_modules.export')->only(['exportExcel', 'exportPdf', 'exportWord']);
+    }
+
     // Action Index
     public function index(Request $request)
     {

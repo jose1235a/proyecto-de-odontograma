@@ -23,6 +23,10 @@ class Kernel extends ConsoleKernel
     {
         // Run daily at midnight
         $schedule->command('downloads:clean')->daily();
+
+        // Process overdue appointments every minute
+        $schedule->command('appointments:process-overdue')->everyMinute();
+
         // $schedule->command('inspire')->hourly();
     }
     /**

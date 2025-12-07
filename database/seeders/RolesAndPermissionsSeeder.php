@@ -31,9 +31,10 @@ class RolesAndPermissionsSeeder extends Seeder
         }
 
         // Crear roles globales
-        $super = Role::firstOrCreate(['name' => 'super', 'guard_name' => 'web']);
-        $admin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
-        $user  = Role::firstOrCreate(['name' => 'user',  'guard_name' => 'web']);
+        $super = Role::firstOrCreate(['name' => 'super', 'guard_name' => 'web'], ['description' => 'Rol con todos los permisos']);
+        $admin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web'], ['description' => 'Rol administrativo con todos los permisos']);
+        $doctor = Role::firstOrCreate(['name' => 'doctor', 'guard_name' => 'web'], ['description' => 'Rol para doctores con permisos de gestión dental']);
+        $user  = Role::firstOrCreate(['name' => 'user',  'guard_name' => 'web'], ['description' => 'Rol básico de usuario']);
 
         // Super tiene todos los permisos
         $super->syncPermissions(Permission::all());
@@ -41,9 +42,19 @@ class RolesAndPermissionsSeeder extends Seeder
         // Admin tiene todos los permisos (igual que super en este caso)
         $admin->syncPermissions(Permission::all());
 
+        // Doctor tiene permisos solo de módulos de dental_management
+        $dentalModules = ['doctors', 'patients', 'treatments', 'appointments', 'specialties', 'odontogram', 'consultations', 'payments', 'reports', 'summary', 'calendar', 'appointment_history'];
+        $doctorPermissions = [];
+        foreach ($dentalModules as $module) {
+            foreach ($actions as $action) {
+                $doctorPermissions[] = "{$module}.{$action}";
+            }
+        }
+        $doctor->syncPermissions($doctorPermissions);
+
         // User tiene permisos limitados
         $user->syncPermissions([
-            'countries.index',
+            'countries.view',
             'countries.show',
         ]);
     }

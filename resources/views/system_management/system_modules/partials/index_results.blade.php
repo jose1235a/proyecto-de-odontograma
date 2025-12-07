@@ -27,15 +27,21 @@
         <td>{{ $system_module->permission_key }}</td>
         <td>
           <div class="btn-group btn-group-sm" role="group">
+            @can('system_modules.view')
             <a class="btn btn-light" href="{{ route('system_management.system_modules.show', $system_module) }}" title="{{ __('global.show') }}">
               <i class="fas fa-eye"></i>
             </a>
+            @endcan
+            @can('system_modules.edit')
             <a class="btn btn-light" href="{{ route('system_management.system_modules.edit', $system_module) }}" title="{{ __('global.edit') }}">
               <i class="fas fa-pen"></i>
             </a>
+            @endcan
+            @can('system_modules.delete')
             <a class="btn btn-light" href="{{ route('system_management.system_modules.delete', $system_module) }}" title="{{ __('global.delete') }}">
               <i class="fas fa-trash"></i>
             </a>
+            @endcan
           </div>
         </td>
       </tr>

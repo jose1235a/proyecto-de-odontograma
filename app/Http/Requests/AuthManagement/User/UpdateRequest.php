@@ -29,6 +29,7 @@ class UpdateRequest extends FormRequest
             'email'    => ['required', 'email', Rule::unique('users', 'email')->ignore($user->id)],
             'password' => 'nullable|string|min:6',
             'photo'    => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'role'     => 'required|string|exists:roles,name',
         ];
     }
     

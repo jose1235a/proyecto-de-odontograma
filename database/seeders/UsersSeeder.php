@@ -26,14 +26,20 @@ class UsersSeeder extends Seeder
             ['name' => 'Pampis de Tiktok', 'email' => 'fabio@gmail.com'],
         ];
 
+        $roleMap = [
+            'pingo@gmail.com' => 'super',
+            'pinga@gmail.com' => 'admin',
+            'joel@gmail.com'  => 'language_manager',
+        ];
+
         foreach ($users as $data) {
-            User::firstOrCreate(
+            $user = User::firstOrCreate(
                 ['email' => $data['email']],
                 [
                     'name'       => $data['name'],
                     'password'   => Hash::make('123456'),
                     'slug'       => Str::random(22),
-                    'tenant_id' => 1,
+                    'tenant_id'  => 1,
                     'country_id' => 1,
                     'locale_id'  => 1,
                     'created_by' => 1,
@@ -42,6 +48,9 @@ class UsersSeeder extends Seeder
                     'updated_at' => now(),
                 ]
             );
+
+            $role = $roleMap[$data['email']] ?? 'user';
+            $user->syncRoles($role);
         }
     }
 }

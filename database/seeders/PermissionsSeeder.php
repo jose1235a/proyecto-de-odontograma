@@ -13,6 +13,16 @@ class PermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         $actions = ['view', 'create', 'edit', 'delete', 'export', 'edit_all'];
+        $explicitModules = ['languages', 'tenants', 'regions', 'roles'];
+
+        foreach ($explicitModules as $module) {
+            foreach ($actions as $action) {
+                Permission::firstOrCreate([
+                    'name' => "{$module}.{$action}",
+                    'guard_name' => 'web',
+                ]);
+            }
+        }
 
         $modules = DB::table('system_modules')->whereNull('deleted_at')->get();
 

@@ -25,6 +25,7 @@ class StoreRequest extends FormRequest
         'email'    => 'required|email|unique:users,email',
         'password' => 'required|string|min:6',
         'photo'    => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+        'role'     => 'required|string|exists:roles,name',
       ];
     }
 
